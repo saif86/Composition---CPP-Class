@@ -21,9 +21,9 @@ Date::Date(const Date & obj)
 
 
 // Stream Insertion
-ostream & operator <<(ostream & os, const Date & D)
+ostream & operator<<(ostream & os, const Date & d)
 {
-	os << D.getDay() << "/" << D.getMonth() << "/" << D.getYear();
+	os << d.getDay() << "/" << d.getMonth() << "/" << d.getYear();
 	return os;
 }
 
@@ -65,26 +65,41 @@ void Date::setYear(int y)
 }
 
 void Date::setDate(int d, int m, int y) {
-	setYear(y);
-	setMonth(m);
-	setDay(d);
+	this->setYear(y);
+	this->setMonth(m);
+	this->setDay(d);
 }
 
 void Date::setDate(const Date &obj) {
 	setDate(obj.getDay(), obj.getMonth(), obj.getYear());
 }
-
 int Date::getDay()const
 {
-	return day;
+	return this->day;
 }
 int Date::getMonth()const
 {
-	return month;
+	return this->month;
 }
 int Date::getYear()const
 {
-	return year;
+	return this->year;
+}
+Date Date::getDate()const {
+	return *this;
+}
+Date Date::getToDay() {
+	time_t currentTime = time(NULL);
+	struct tm localTime;
+
+	time(&currentTime);                   // Get the current time
+	localtime_s(&localTime, &currentTime);  // Convert the current time to the local time
+
+	int Day1 = localTime.tm_mday;
+	int Month1 = localTime.tm_mon + 1;
+	int Year1 = localTime.tm_year + 1900;
+	Date t(Day1, Month1, Year1);
+	return t;
 }
 
 void Date::addDay(int x) {
@@ -124,24 +139,27 @@ void Date::addYear(int x) {
 	}
 }
 
+double Date::caclAge() {
+	double y = 0.0, m= 0.0, d =0.0;
+	y = getToDay().getYear() - this->getYear();
+	m = getToDay().getMonth() - this->getMonth();
+	d = getToDay().getDay() - this->getDay();
+
+	m = m / 12.0;
+	d = d / 365.25;
+	y = y + m + d;
+
+	return y;
+}
+
 void Date::setDefaultDate(int d, int m, int y)
 {
-	time_t currentTime = time(NULL);
-	struct tm localTime;
-
-	time(&currentTime);                   // Get the current time
-	localtime_s(&localTime, &currentTime);  // Convert the current time to the local time
-
-
-	int Day1 = localTime.tm_mday;
-	int Month1 = localTime.tm_mon + 1;
-	int Year1 = localTime.tm_year + 1900;
 	if (d == 0)
-		d = Day1;
+		d = getToDay().getDay();
 	if (m == 0)
-		m = Month1;
+		m = getToDay().getMonth();
 	if (y == 0)
-		y = Year1;
+		y = getToDay().getYear();
 	defaultDate.setDate(d, m, y);
 }
 
