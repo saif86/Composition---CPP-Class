@@ -29,10 +29,14 @@ public:
 	int getDay()const;
 	int getMonth()const;
 	int getYear()const;
+	Date getDate()const;
+	static Date getToDay();
 
 	void addDay(int);
 	void addMonth(int);
 	void addYear(int);
+
+	double caclAge();
 
 	static void setDefaultDate(int = 0, int = 0, int = 0);		// default date setter function
 	static const Date & getDefaultDate();						// defualt date getter function
