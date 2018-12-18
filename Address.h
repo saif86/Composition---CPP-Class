@@ -20,7 +20,7 @@ public:
 	friend ostream & operator <<(ostream &, const Address &);	// Stream Insertion
 	friend istream & operator >>(istream &, Address &);			// Stream Extraction
 
-	// setters
+																// setters
 	void setHouseNo(int = 0);
 	void setStreet(string = "");
 	void setCity(string = "");
@@ -35,6 +35,7 @@ public:
 	string getCity()const;
 	string getProvince()const;
 	int getPostCode()const;
+	Address getAddress()const;
 
 	void PrintAddress()const;	// prints the complete address 
 
