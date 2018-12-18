@@ -10,7 +10,7 @@ using namespace std;
 //Address Address::defaultAddress(0, "Milford Road", "Leicester", "Leicestershire", 1234);	// intitalize class variable 
 Address Address::defaultAddress(1, "Mailsi Road Off Multan Road", "Vehari", "Punjab", 61100);	// intitalize class variable 
 
-// Address default + overloaded constructor initializes all data members to user supplied values 
+																								// Address default + overloaded constructor initializes all data members to user supplied values 
 Address::Address(int aHouseNo, string aStreet, string aCity, string aProvince, int aPostCode) : HouseNo(aHouseNo), Street(aStreet), City(aCity), Province(aProvince), PostCode(aPostCode) {
 	// initialization using member intializing list 
 	setAddress(aHouseNo, aStreet, aCity, aProvince, aPostCode);
@@ -31,7 +31,7 @@ istream & operator >>(istream & is, Address & a)
 {
 	int hNo, pCode;
 	string St, Cty, Prov;
-	
+
 	cout << "Enter House no: ";
 	is >> hNo;
 	cout << "Enter Street: ";
@@ -68,7 +68,7 @@ void Address::setStreet(string aStreet) {
 void Address::setCity(string aCity) {
 	if (aCity == "") {
 		cout << "ERROR: No city name provided. Setting it to default value." << endl;
-		City= defaultAddress.City;
+		City = defaultAddress.City;
 	}
 	else
 		City = aCity;
@@ -115,13 +115,15 @@ string Address::getProvince()const {
 int Address::getPostCode()const {
 	return PostCode;
 }
-
+Address Address::getAddress()const {
+	return *this;
+}
 // print complete address 
 void Address::PrintAddress()const {
 	cout << getHouseNo() << ", " << getStreet() << "," << endl << getCity() << ", " << getProvince() << "," << endl << getPostCode() << endl;
 } // end function PrintAddress 
 
-// set default Address
+  // set default Address
 void Address::setDefaultAddress(int aHouseNo, string aStreet, string aCity, string aProvince, int aPostCode) {
 	defaultAddress.setAddress(aHouseNo, aStreet, aCity, aProvince, aPostCode);
 }
