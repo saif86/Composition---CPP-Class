@@ -1,34 +1,32 @@
-#include "Address.h"
-#include<iostream>
+#include "Address.h"	// class implemented
 #include<string>
-
 using namespace std;
 
-// File scope starts here 
+// File scope starts here
 
-/*private static member cannot be accessed outside the class except for initialization*/
-//Address Address::defaultAddress(0, "Milford Road", "Leicester", "Leicestershire", 1234);	// intitalize class variable 
-Address Address::defaultAddress(1, "Mailsi Road Off Multan Road", "Vehari", "Punjab", 61100);	// intitalize class variable 
+/////////////////////////////// PUBLIC ///////////////////////////////////////
 
-																								// Address default + overloaded constructor initializes all data members to user supplied values 
-Address::Address(int aHouseNo, string aStreet, string aCity, string aProvince, int aPostCode) : HouseNo(aHouseNo), Street(aStreet), City(aCity), Province(aProvince), PostCode(aPostCode) {
+//============================= LIFECYCLE ====================================
+
+// Address Default + Overloaded constructor
+Address::Address(int aHouseNo, const string& aStreet, const string& aCity, const string& aProvince, int aPostCode) : mHouseNo(aHouseNo), mStreet(aStreet), mCity(aCity), mProvince(aProvince), mPostCode(aPostCode) {
 	// initialization using member intializing list 
-	setAddress(aHouseNo, aStreet, aCity, aProvince, aPostCode);
-} // end overloaded constructor Address 
+	this->SetAddress(aHouseNo, aStreet, aCity, aProvince, aPostCode);
+} 
+// end Address constructor 
 
-  /* Copy constructor with deep copy for pointer members*/
-Address::Address(const Address &obj) : HouseNo(obj.getHouseNo()), Street(obj.getStreet()), City(obj.getCity()), Province(obj.getProvince()), PostCode(obj.getPostCode()) { }
+
+//============================= OPERATORS ====================================
 
 // Stream Insertion
-ostream & operator <<(ostream & os, const Address & a)
-{
-	os << a.getHouseNo() << ", " << a.getStreet() << "," << endl << a.getCity() << ", " << a.getProvince() << "," << endl << a.getPostCode();
+ostream& operator <<(ostream& os, const Address& a) {
+	os << a.GetHouseNo() << ", " << a.GetStreet() << "," << endl << a.GetCity() << ", " << a.GetProvince() << "," << endl << a.GetPostCode();
 	return os;
-}
+} 
+// end stream insertion
 
 // Stream Extraction
-istream & operator >>(istream & is, Address & a)
-{
+istream & operator >>(istream & is, Address & a) {
 	int hNo, pCode;
 	string St, Cty, Prov;
 
@@ -43,98 +41,174 @@ istream & operator >>(istream & is, Address & a)
 	getline(is, Prov);
 	cout << "Enter Post Code: ";
 	is >> pCode;
-	a.setAddress(hNo, St, Cty, Prov, pCode);
+	a.SetAddress(hNo, St, Cty, Prov, pCode);
 
 	return is;
-}
+} 
+// end stream extraction
 
 
-void Address::setHouseNo(int aHouseNo) {
+//============================= OPERATIONS ===================================
+
+// function that prints complete address 
+void Address::PrintAddress()const {
+	cout << this->GetHouseNo() << ", " << this->GetStreet() << "," << endl << this->GetCity() << ", " << this->GetProvince() << "," << endl << this->GetPostCode() << endl;
+} 
+// end function PrintAddress 
+
+// static function that prints default address 
+void Address::sPrintDefaultAddress() {
+	msDefaultAddress.PrintAddress();
+} 
+// end function sPrintDefaultAddress
+
+
+//============================= ACESS      ===================================
+
+// function that sets House no
+void Address::SetHouseNo(int aHouseNo) {
 	if (aHouseNo < 1) {
 		cout << "ERROR: House no is invalid. Setting it to default value." << endl;
-		HouseNo = defaultAddress.HouseNo;
+		this->mHouseNo = msDefaultAddress.GetHouseNo();
 	}
 	else
-		HouseNo = aHouseNo;
-}
-void Address::setStreet(string aStreet) {
+		this->mHouseNo = aHouseNo;
+} 
+// end function SetHouseNo
+
+// function that sets street name
+void Address::SetStreet(const string& aStreet) {
 	if (aStreet == "") {
 		cout << "ERROR: No street info provided. Setting it to default value." << endl;
-		Street = defaultAddress.Street;
+		this->mStreet = msDefaultAddress.GetStreet();
 	}
 	else
-		Street = aStreet;
-}
-void Address::setCity(string aCity) {
-	if (aCity == "") {
-		cout << "ERROR: No city name provided. Setting it to default value." << endl;
-		City = defaultAddress.City;
+		this->mStreet = aStreet;
+} 
+// end function SetStreet
+
+// function that sets city
+void Address::SetCity(const string& aCity) {
+	if (this->IsValidName(aCity))
+		this->mCity = aCity;
+	else {
+		cout << "ERROR: Invalid city name provided. Setting it to default value." << endl;
+		this->mCity = msDefaultAddress.GetCity();
 	}
-	else
-		City = aCity;
-}
-void Address::setProvince(string aProvince) {
-	if (aProvince == "") {
-		cout << "ERROR: No city name provided. Setting it to default value." << endl;
-		Province = defaultAddress.Province;
+} 
+// end function SetCity
+
+// function that sets province
+void Address::SetProvince(const string& aProvince) {
+	if (this->IsValidName(aProvince))
+		this->mProvince = aProvince;
+	else {
+		cout << "ERROR: Invalid province name provided. Setting it to default value." << endl;
+		this->mProvince = msDefaultAddress.GetProvince();
 	}
-	else
-		Province = aProvince;
-}
-void Address::setPostCode(int aPostCode) {
+} 
+// end function SetProvince
+
+// function that sets post code
+void Address::SetPostCode(int aPostCode) {
 	if (aPostCode < 1) {
 		cout << "ERROR: Post code no is invalid. Setting it to default value." << endl;
-		PostCode = defaultAddress.PostCode;
+		this->mPostCode = msDefaultAddress.GetPostCode();
 	}
 	else
-		PostCode = aPostCode;
-}
+		this->mPostCode = aPostCode;
+} 
+// end function SetPostCode
 
-void Address::setAddress(int aHouseNo, string aStreet, string aCity, string aProvince, int aPostCode) {
-	setHouseNo(aHouseNo);
-	setStreet(aStreet);
-	setCity(aCity);
-	setProvince(aProvince);
-	setPostCode(aPostCode);
-}
-void Address::setAddress(const Address &obj) {
-	setAddress(obj.getHouseNo(), obj.getStreet(), obj.getCity(), obj.getProvince(), obj.getPostCode());
-}
-int Address::getHouseNo()const {
-	return HouseNo;
-}
-string Address::getStreet()const {
-	return Street;
-}
-string Address::getCity()const {
-	return City;
-}
-string Address::getProvince()const {
-	return Province;
-}
-int Address::getPostCode()const {
-	return PostCode;
-}
-Address Address::getAddress()const {
+// function that sets the Address
+void Address::SetAddress(int aHouseNo, const string& aStreet, const string& aCity, const string& aProvince, int aPostCode) {
+	this->SetHouseNo(aHouseNo);
+	this->SetStreet(aStreet);
+	this->SetCity(aCity);
+	this->SetProvince(aProvince);
+	this->SetPostCode(aPostCode);
+} 
+// end function SetAddress
+
+// overloaded function that sets the Address
+void Address::SetAddress(const Address& obj) {
+	this->SetAddress(obj.GetHouseNo(), obj.GetStreet(), obj.GetCity(), obj.GetProvince(), obj.GetPostCode());
+} 
+// end function SetAddress
+
+// static function that sets default Address
+void Address::sSetDefaultAddress(int aHouseNo, const string& aStreet, const string& aCity, const string& aProvince, int aPostCode) {
+	msDefaultAddress.SetAddress(aHouseNo, aStreet, aCity, aProvince, aPostCode);
+} 
+// end function sSetDefaultAddress
+
+// static overloaded function that sets the default Address
+void Address::sSetDefaultAddress(const Address& obj) {
+	msDefaultAddress.sSetDefaultAddress(obj.GetHouseNo(), obj.GetStreet(), obj.GetCity(), obj.GetProvince(), obj.GetPostCode());
+} 
+// end function sSetDefaultAddress
+
+// function that gets House no
+int Address::GetHouseNo()const {
+	return this->mHouseNo;
+} 
+// end function GetHouseNo
+
+// function that gets Street
+const string& Address::GetStreet()const {
+	return this->mStreet;
+} 
+// end function GetStreet
+
+// function that gets the City
+const string& Address::GetCity()const {
+	return this->mCity;
+} 
+// end function GetCity
+
+// function that gets Province
+const string& Address::GetProvince()const {
+	return this->mProvince;
+} 
+// end function GetProvince
+
+// function that gets Post code
+int Address::GetPostCode()const {
+	return this->mPostCode;
+} 
+// end function GetPostCode
+
+// function that gets the Address
+const Address& Address::GetAddress()const {
 	return *this;
-}
-// print complete address 
-void Address::PrintAddress()const {
-	cout << getHouseNo() << ", " << getStreet() << "," << endl << getCity() << ", " << getProvince() << "," << endl << getPostCode() << endl;
-} // end function PrintAddress 
+} 
+// end function GetAddress
 
-  // set default Address
-void Address::setDefaultAddress(int aHouseNo, string aStreet, string aCity, string aProvince, int aPostCode) {
-	defaultAddress.setAddress(aHouseNo, aStreet, aCity, aProvince, aPostCode);
-}
+// static function that gets the default Address
+const Address& Address::sGetDefaultAddress() {
+	return msDefaultAddress;
+} 
+// end function sGetDefaultAddress
 
-void Address::setDefaultAddress(const Address &obj) {
-	defaultAddress.setDefaultAddress(obj.getHouseNo(), obj.getStreet(), obj.getCity(), obj.getProvince(), obj.getPostCode());
-}
+/////////////////////////////// PRIVATE    ///////////////////////////////////
 
-Address  Address::getDefaultAddress() {
-	return defaultAddress;
+//============================= INQUIRY    ===================================
+
+/** utility function to check name of city or Province.
+* Only checks for alphabetic characters and first cap letter.
+*
+* @param testName The name to be tested.
+*
+* @return true if testName is valid, false otherwise.
+*/
+bool Address::IsValidName(const string& testName)const {
+	// first letter must be capital
+	if (!isupper(testName[0]))
+		return false;
+	return !(testName.find_first_not_of("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ") != std::string::npos);
 }
-void Address::printDefaultAddress() {
-	defaultAddress.PrintAddress();
-}
+// end function IsValidName
+
+
+/*private static member cannot be accessed outside the class except for initialization*/
+Address Address::msDefaultAddress(30, "Milford Road", "Leicester", "Leicestershire", 1234);	// intitalize class variable 
