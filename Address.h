@@ -1,48 +1,113 @@
-#ifndef Address_HEADER 
-#define Address_HEADER
+/**  Address class to handle addresses in a C++ code.
+*
+* #include "Address.h" <BR>
+* -llib
+*
+*/
+#ifndef ADDRESS_H
+#define ADDRESS_H
 
-#include <iostream>
+// SYSTEM INCLUDES
+#include<iostream>
+using std::string;
 
-using namespace std;
 // Address class definition 
 class Address {
-	int HouseNo;
-	string  Street;
-	string City;
-	string Province;
-	int PostCode;
-	static Address defaultAddress;
-
 public:
-	Address(int = 0, string = "", string = "", string = "", int = 0);	// default + overloaded constructor
-	Address(const Address &);		//copy constructor
+// LIFECYCLE
+	/** Default + Overloaded constructor.
+	*/
+	Address(int = 0, const string& = "", const string& = "", const string& = "", int = 0);
 
-	friend ostream & operator <<(ostream &, const Address &);	// Stream Insertion
-	friend istream & operator >>(istream &, Address &);			// Stream Extraction
+	// Use compiler-generated copy constructor, assignment, and destructor.
+	// Address(const Address&);
+	// Address& operator=(const Address&);
+	// ~Address();
 
-																// setters
-	void setHouseNo(int = 0);
-	void setStreet(string = "");
-	void setCity(string = "");
-	void setProvince(string = "");
-	void setPostCode(int = 0);
-	void setAddress(int = 0, string = "", string = "", string = "", int = 0);
-	void setAddress(const Address &);
+// OPERATORS
+	/** Stream Insertion operator.
+	*
+	* @param os Standard Output Stream.
+	* @param from The value to be inserted to the output stream.
+	*
+	* @return A reference to the standard output stream.
+	*/
+	friend std::ostream& operator <<(std::ostream& os, const Address& from);
+
+	/** Stream Extraction operator.
+	*
+	* @param is Standard Intput Stream.
+	* @param to The value to be extracted from the input stream.
+	*
+	* @return A reference to the standard input stream.
+	*/
+	friend std::istream& operator >>(std::istream& is, Address& to);
+
+// OPERATIONS
+	/** function that prints the complete address.
+	*
+	* @param void
+	*
+	* @return void
+	*/
+	void PrintAddress()const;
+
+	/** static function that prints the default address
+	*
+	* @param void
+	*
+	* @return void
+	*/
+	static void sPrintDefaultAddress();
+
+// ACCESS
+
+	// setters
+	void SetHouseNo(int = 0);
+	void SetStreet(const string& = "");
+	void SetCity(const string& = "");
+	void SetProvince(const string& = "");
+	void SetPostCode(int = 0);
+	void SetAddress(int = 0, const string& = "", const string& = "", const string& = "", int = 0);
+	/**
+	# @overload void SetAddress(const Address& aAddress);
+	*/
+	void SetAddress(const Address& aAddress);
+	static void sSetDefaultAddress(int = 0, const string& = "", const string& = "", const string& = "", int = 0);
+	/**
+	# @overload static void sSetDefaultAddress(const Address& aDefaultAddress)
+	*/
+	static void sSetDefaultAddress(const Address& aDefaultAddress);
 
 	// getters
-	int getHouseNo()const;
-	string getStreet()const;
-	string getCity()const;
-	string getProvince()const;
-	int getPostCode()const;
-	Address getAddress()const;
+	int GetHouseNo()const;
+	const string& GetStreet()const;
+	const string& GetCity()const;
+	const string& GetProvince()const;
+	int GetPostCode()const;
+	const Address& GetAddress()const;
+	static const Address& sGetDefaultAddress();
 
-	void PrintAddress()const;	// prints the complete address 
+private:
+// INQUIRY
+	/** utility function to check name of city or Province.
+	* Only checks for alphabetic characters and first cap letter.
+	*
+	* @param testName The reference to name to be tested.
+	*
+	* @return true if testName is valid, false otherwise.
+	*/
+	bool IsValidName(const string& testName)const;
 
-	static void setDefaultAddress(int = 0, string = "", string = "", string = "", int = 0);
-	static void setDefaultAddress(const Address &);
-	static Address getDefaultAddress();
-	static void printDefaultAddress(); // static member function 
-}; // end class Address
-
-#endif
+// DATA MEMBERS
+	int mHouseNo;
+	string mStreet;
+	string mCity;
+	string mProvince;
+	int mPostCode;
+	// class variable shared by all objects of Address class
+	static Address msDefaultAddress; 
+}; 
+// end class Address
+#endif 
+// _ADDRESS_H_
