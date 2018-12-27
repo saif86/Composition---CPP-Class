@@ -33,7 +33,7 @@ public:
 	~Employee();
 
 	// Use compiler-generated assignment.
-	// Date& operator=(const Date&);
+	// Employee& operator=(const Employee&);
 
 // OPERATORS
 	/** Stream Insertion operator.
